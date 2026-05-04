@@ -25,16 +25,20 @@ def _extract_pdf(path: Path) -> str:
         raise ValueError(f"PDF is encrypted: {path}")
     text = "\n\n".join(page.extract_text() or "" for page in reader.pages)
     if not text.strip():
-        raise ValueError(
-            f"PDF has no extractable text (likely scanned/image-only): {path}"
-        )
+        raise ValueError(f"PDF has no extractable text (likely scanned/image-only): {path}")
     return text
 
 
 def _extract_epub(path: Path) -> str:
     book = epub.read_epub(str(path))
     chapters: list[str] = []
-    for item in book.get_items_of_type(ITEM_DOCUMENT):
+    # Walk the spine (reading order) rather than book.get_items_of_type, which
+    # returns items in insertion order — the two diverge for any EPUB whose
+    # author added chapters out of reading order.
+    for idref, _linear in book.spine:
+        item = book.get_item_with_id(idref)
+        if item is None or item.get_type() != ITEM_DOCUMENT:
+            continue
         text = trafilatura.extract(item.get_content(), output_format="txt")
         if text:
             chapters.append(text)

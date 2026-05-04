@@ -56,6 +56,16 @@ def test_extract_epub(sample_epub: Path) -> None:
     assert "EPUB body content" in text
 
 
+def test_extract_epub_chapter_order(multi_chapter_epub: Path) -> None:
+    text = extract_text(multi_chapter_epub)
+    pos_alpha = text.find("alpha")
+    pos_beta = text.find("beta")
+    pos_gamma = text.find("gamma")
+    assert pos_alpha != -1 and pos_beta != -1 and pos_gamma != -1, text
+    # Spine declared order is gamma -> alpha -> beta
+    assert pos_gamma < pos_alpha < pos_beta, (pos_gamma, pos_alpha, pos_beta)
+
+
 def test_extract_html(tmp_path: Path) -> None:
     html = tmp_path / "article.html"
     html.write_text(

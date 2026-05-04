@@ -19,7 +19,10 @@ def _root() -> None:
 @app.command()
 def ingest(
     path: Path = typer.Argument(
-        ..., exists=True, readable=True, help="File to ingest (.txt, .md, .pdf)."
+        ...,
+        exists=True,
+        readable=True,
+        help="File to ingest (.txt, .md, .pdf, .epub, .html).",
     ),
     vault: Path = typer.Option(Path("vault"), help="Vault directory."),
     yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation."),
