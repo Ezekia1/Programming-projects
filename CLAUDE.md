@@ -42,6 +42,7 @@ vault/         # the user's notes (gitignored)
 - Don't add comments that restate the code. A comment earns its place by explaining a non-obvious *why*.
 - Tests don't hit the network by default. Real-API smoke tests are gated by `RUN_API_TESTS=1` and skipped otherwise.
 - The vault under `vault/` is the user's personal data — never commit its contents.
+- Cost note: each `analyze()` call is roughly $0.05–$0.20 on Opus 4.7 with adaptive thinking + high effort. Long readings (≥30 pages) can hit ~$0.40. The `PROMPT_VERSION` constant in `analyze.py` should be bumped whenever `SYSTEM_PROMPT` changes — that's how a future C6 audit will be able to identify which prompt produced which note.
 
 ## Working on this project
 

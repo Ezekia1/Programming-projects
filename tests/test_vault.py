@@ -10,8 +10,24 @@ def make_note() -> Note:
     return Note(
         title="CRISPR overview",
         subject="genetics",
-        summary="A short summary.",
-        key_points=[KeyPoint(text="Cas9 cuts DNA", detail="Via PAM-adjacent recognition.")],
+        summary="A summary that is at least twenty characters long for testing purposes.",
+        key_points=[
+            KeyPoint(
+                text="Cas9 cuts dsDNA at sites adjacent to PAM",
+                detail="Cas9 needs a guide RNA and recognition of a 5'-NGG PAM motif.",
+            ),
+            KeyPoint(
+                text="CRISPR adapts immunity to invading nucleic acids",
+                detail="Spacers are integrated from past infections and transcribed as crRNAs.",
+            ),
+            KeyPoint(
+                text="Editing precision depends on guide design",
+                detail=(
+                    "Off-target effects are reduced by careful sgRNA selection "
+                    "and HiFi Cas9 variants."
+                ),
+            ),
+        ],
         tags=["crispr", "gene-editing"],
         concepts=["Cas9", "PAM"],
     )
@@ -30,7 +46,7 @@ def test_write_note_creates_file(tmp_path: Path) -> None:
     post = frontmatter.load(path)
     assert post.metadata["title"] == "CRISPR overview"
     assert post.metadata["tags"] == ["crispr", "gene-editing"]
-    assert "Cas9 cuts DNA" in post.content
+    assert "Cas9 cuts dsDNA" in post.content
 
 
 def test_write_note_idempotent(tmp_path: Path) -> None:
