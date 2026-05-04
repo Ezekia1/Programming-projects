@@ -38,9 +38,11 @@ Each checkpoint has explicit pass criteria. A checkpoint is "done" when the crit
 
 ### C4 — Vault writer
 
-- `write_note(note, vault_dir, source)` writes `<vault>/<subject-slug>/<title-slug>.md`
-- Frontmatter has title, subject, tags, concepts, source, updated
-- Idempotent: re-running on the same note overwrites in place, doesn't duplicate
+- `write_note(note, vault_dir, source, prompt_version=...)` writes `<vault>/<subject-slug>/<title-slug>.md`
+- Frontmatter has title, subject, tags, concepts, source, prompt_version, created, updated
+- `created` is preserved across rewrites; `updated` reflects each write
+- Body has `# title`, `## Summary`, `## Key points` (one H3 per point), and `## Concepts` (bullet list, omitted if empty)
+- Idempotent on (subject, title): re-running on the same note overwrites in place, doesn't duplicate
 - `existing_tags(vault_dir)` returns sorted unique tags from frontmatter
 
 ### C5 — End-to-end CLI

@@ -25,11 +25,33 @@ def existing_tags(vault_dir: Path) -> list[str]:
     return sorted(tags)
 
 
-def write_note(note: Note, vault_dir: Path, source: str) -> Path:
-    """Write the note to <vault>/<subject>/<title>.md. Idempotent on (subject, title)."""
+def _now_iso() -> str:
+    return datetime.now().isoformat(timespec="seconds")
+
+
+def write_note(
+    note: Note,
+    vault_dir: Path,
+    source: str,
+    *,
+    prompt_version: str = "unknown",
+) -> Path:
+    """Write the note to <vault>/<subject>/<title>.md.
+
+    Idempotent on (subject, title): re-running on a note with the same subject
+    and title overwrites the file in place. The `created` timestamp is
+    preserved across rewrites; `updated` always reflects the current write.
+    """
     subject_dir = vault_dir / slugify(note.subject)
     subject_dir.mkdir(parents=True, exist_ok=True)
     path = subject_dir / f"{slugify(note.title)}.md"
+
+    now = _now_iso()
+    created = now
+    if path.exists():
+        existing = frontmatter.load(path)
+        if "created" in existing.metadata:
+            created = str(existing.metadata["created"])
 
     metadata = {
         "title": note.title,
@@ -37,11 +59,22 @@ def write_note(note: Note, vault_dir: Path, source: str) -> Path:
         "tags": note.tags,
         "concepts": note.concepts,
         "source": source,
-        "updated": datetime.now().isoformat(timespec="seconds"),
+        "prompt_version": prompt_version,
+        "created": created,
+        "updated": now,
     }
-    body_parts: list[str] = [f"## Summary\n\n{note.summary}\n", "## Key points\n"]
+
+    body_parts: list[str] = [
+        f"# {note.title}\n",
+        f"## Summary\n\n{note.summary}\n",
+        "## Key points\n",
+    ]
     for kp in note.key_points:
         body_parts.append(f"### {kp.text}\n\n{kp.detail}\n")
+    if note.concepts:
+        concept_lines = "\n".join(f"- {c}" for c in note.concepts)
+        body_parts.append(f"## Concepts\n\n{concept_lines}\n")
+
     post = frontmatter.Post("\n".join(body_parts), **metadata)
     path.write_text(frontmatter.dumps(post) + "\n", encoding="utf-8")
     return path

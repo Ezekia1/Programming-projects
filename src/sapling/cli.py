@@ -3,7 +3,7 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from .analyze import analyze
+from .analyze import PROMPT_VERSION, analyze
 from .extract import extract_text
 from .vault import existing_tags, write_note
 
@@ -49,7 +49,7 @@ def ingest(
     if not yes and not typer.confirm("Save this note?", default=True):
         raise typer.Abort()
 
-    out = write_note(note, vault, source=str(path.resolve()))
+    out = write_note(note, vault, source=str(path.resolve()), prompt_version=PROMPT_VERSION)
     console.print(f"[green]Saved[/green] {out}")
 
 
