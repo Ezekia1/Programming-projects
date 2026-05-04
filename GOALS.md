@@ -25,8 +25,9 @@ Each checkpoint has explicit pass criteria. A checkpoint is "done" when the crit
 
 ### C2 — Text extraction
 
-- `extract_text(path)` handles `.txt`, `.md`, `.pdf`
-- Tests: round-trip text, raise on unsupported extension
+- `extract_text(path)` handles `.txt`, `.md`, `.pdf`, `.epub`, `.html` / `.htm`
+- Tests cover each format including edge cases (encrypted PDF, no-text PDF, empty HTML)
+- Smoke-tested on at least one real open-access paper
 
 ### C3 — Structured extraction
 

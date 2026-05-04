@@ -7,6 +7,9 @@ dependencies = [
     "anthropic>=0.71.0",
     "pydantic>=2.9",
     "pypdf>=5.1",
+    "ebooklib>=0.18",
+    "trafilatura>=2.0",
+    "beautifulsoup4>=4.12",
     "typer>=0.15",
     "rich>=13.9",
     "python-frontmatter>=1.1",
@@ -26,6 +29,7 @@ packages = ["src/sapling"]
 dev = [
     "pytest>=8.3",
     "ruff>=0.8",
+    "fpdf2>=2.7",
 ]
 
 [tool.ruff]
