@@ -20,6 +20,9 @@ Personal study tool. Ingest a reading, extract a structured note via the Claude 
 | Format | `uv run ruff format` |
 | CLI help | `uv run sapling --help` |
 | Ingest a reading | `uv run sapling ingest path/to/file.pdf` |
+| Ingest with verbose logs | `uv run sapling ingest path/to/file.pdf -v` |
+
+The CLI loads `ANTHROPIC_API_KEY` from a project-local `.env` automatically (via `python-dotenv`); `export`ing it in the shell also works.
 
 ## Layout
 
