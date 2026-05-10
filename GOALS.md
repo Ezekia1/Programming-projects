@@ -59,9 +59,11 @@ Each checkpoint has explicit pass criteria. A checkpoint is "done" when the crit
 
 ### C7 — Review/edit gate
 
-- Before write, the structured output is shown
-- User can: accept, edit (opens `$EDITOR` on a JSON view), or reject
-- Re-validates Pydantic on edit; reject means no file written
+- Before write, the structured output is shown in full (summary + each key_point's text and detail + concepts)
+- User can: **accept**, **edit** (opens `$EDITOR` on a YAML view), or **reject**
+- On edit save, re-validates via Pydantic; on validation failure, shows the error inline and offers to re-edit (broken YAML carried back into the editor) or abandon
+- Reject means no file is written
+- `--yes` skips the prompt and auto-accepts (for batch ingestion)
 
 ### C8 — Visualization (deferred)
 
